@@ -2,15 +2,21 @@
   "name": "@universal-school/backend",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "description": "Universal School Platform - Dedicated API and Business Rules Engine",
   "scripts": {
     "typecheck": "tsc --noEmit",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "node --loader ts-node/esm --no-warnings src/modules/organization/tests/organization.test.ts 2>nul || (npm run build && node dist/modules/organization/tests/organization.test.js)"
   },
   "dependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
     "@universal-school/config": "*",
     "@universal-school/shared-types": "*",
-    "@universal-school/validation": "*"
+    "@universal-school/validation": "*",
+    "cors": "^2.8.6",
+    "express": "^5.3.0"
   },
   "devDependencies": {
     "@types/node": "^20",
