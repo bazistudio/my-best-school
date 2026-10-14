@@ -19,7 +19,10 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@universal-school/config": ["../../packages/config/src/index.ts"],
+      "@universal-school/shared-types": ["../../packages/shared-types/src/index.ts"],
+      "@universal-school/validation": ["../../packages/validation/src/index.ts"]
     }
   },
   "include": [

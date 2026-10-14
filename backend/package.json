@@ -1,0 +1,19 @@
+{
+  "name": "@universal-school/backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Universal School Platform - Dedicated API and Business Rules Engine",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@universal-school/config": "*",
+    "@universal-school/shared-types": "*",
+    "@universal-school/validation": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}
