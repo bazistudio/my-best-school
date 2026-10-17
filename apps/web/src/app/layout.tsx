@@ -15,6 +15,9 @@ const poppins = Poppins({
   display: "swap",
 });
 
+import { AuthProvider } from "@/lib/auth-context";
+import { AppShell } from "@/components/layout";
+
 export const metadata: Metadata = {
   title: "School Universel · Universal School Platform",
   description: "Universal multi-branch school administration platform baseline",
@@ -31,7 +34,9 @@ export default function RootLayout({
       className={`${inter.variable} ${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-[var(--background)] text-[var(--foreground)]">
-        {children}
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );

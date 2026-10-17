@@ -6,105 +6,120 @@ export default function Home() {
   const config = getActiveSchoolConfig();
 
   return (
-    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)] flex flex-col justify-between p-8 font-sans">
-      <header className="max-w-6xl w-full mx-auto flex items-center justify-between border-b border-[var(--border-subtle)] pb-6">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-[var(--radius-xl)] bg-[var(--color-primary)] flex items-center justify-center font-bold text-lg text-[var(--color-primary-foreground)] shadow-lg shadow-[rgba(0,41,107,0.3)] border border-[rgba(255,255,255,0.1)]">
-            {config.school.shortName.slice(0, 2)}
+    <div className="space-y-8">
+      {/* Welcome Banner */}
+      <div className="p-6 sm:p-8 rounded-[var(--radius-2xl)] bg-[var(--surface-base)] border border-[var(--border-subtle)] backdrop-blur-sm relative overflow-hidden shadow-xl">
+        <div className="max-w-2xl">
+          <div className="flex items-center gap-2 mb-3">
+            <Badge variant="primary" size="sm">
+              Phase 01 Active
+            </Badge>
+            <Badge variant="success" size="sm">
+              Session: {config.academicYear}
+            </Badge>
           </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight text-[var(--foreground)] font-heading">{config.school.name}</h1>
-            <p className="text-xs text-[var(--text-secondary)]">{config.school.tagline}</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          <Link href="/organization">
-            <Button variant="primary" size="sm">
-              Launch Organization Portal →
-            </Button>
-          </Link>
-          <Badge variant="success">
-            Session: {config.academicYear}
-          </Badge>
-          <Badge variant="neutral">
-            Design System v1.0
-          </Badge>
-        </div>
-      </header>
-
-      <main className="max-w-6xl w-full mx-auto my-12">
-        <div className="mb-10">
-          <h2 className="text-3xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-4xl mb-3 font-heading">
-            School Universel Platform
-          </h2>
-          <p className="text-[var(--text-secondary)] max-w-2xl text-base leading-relaxed">
-            Multi-branch school administration system foundation. Powered by universal design tokens,
-            shared UI primitives, and zero hardcoded branding.
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--foreground)] font-heading tracking-tight mb-2">
+            Welcome to {config.school.name}
+          </h1>
+          <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed mb-6">
+            Universal multi-branch school administration console. Manage campus networks,
+            institutional profiles, and operational parameters from a single foundation.
           </p>
+          <div className="flex flex-wrap items-center gap-3">
+            <Link href="/organization">
+              <Button variant="primary" size="md">
+                Manage Campuses & Branches →
+              </Button>
+            </Link>
+          </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <div className="h-8 w-8 rounded-[var(--radius-md)] bg-[rgba(0,41,107,0.25)] text-blue-300 flex items-center justify-center mb-4 font-semibold text-xs border border-[rgba(0,41,107,0.4)]">
-              01
-            </div>
-            <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2 font-heading">School & Branches</h3>
-            <p className="text-xs text-[var(--text-secondary)] mb-4">
-              Configured branches for this instance:
-            </p>
-            <ul className="space-y-2 text-xs">
-              {config.branches.map((b) => (
-                <li key={b.id} className="flex justify-between p-2 rounded-[var(--radius-md)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
-                  <span className="font-medium text-[var(--foreground)]">{b.name}</span>
-                  <span className="text-[var(--text-muted)] font-mono">[{b.code}]</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
+      {/* Foundation Status & Campus Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Card 1: Campuses Overview */}
+        <Card variant="elevated">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-[var(--foreground)] font-heading">
+              Authorized Campuses
+            </h2>
+            <Badge variant="neutral">
+              {config.branches.length} Registered
+            </Badge>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mb-4">
+            Active branches connected to this institutional deployment:
+          </p>
+          <ul className="space-y-2 text-xs">
+            {config.branches.map((b) => (
+              <li
+                key={b.id}
+                className="flex items-center justify-between p-2.5 rounded-[var(--radius-lg)] bg-[var(--surface-base)] border border-[var(--border-subtle)]"
+              >
+                <div>
+                  <span className="font-semibold text-[var(--foreground)] block">{b.name}</span>
+                  <span className="text-[10px] text-[var(--text-muted)] font-mono">[{b.code}]</span>
+                </div>
+                {b.isMain ? (
+                  <Badge variant="warning" size="sm">Main Campus</Badge>
+                ) : (
+                  <Badge variant="neutral" size="sm">Branch</Badge>
+                )}
+              </li>
+            ))}
+          </ul>
+        </Card>
 
-          <Card>
-            <div className="h-8 w-8 rounded-[var(--radius-md)] bg-[var(--color-success-subtle)] text-emerald-400 flex items-center justify-center mb-4 font-semibold text-xs border border-[var(--color-success-border)]">
-              02
+        {/* Card 2: Institutional Parameters */}
+        <Card variant="elevated">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-[var(--foreground)] font-heading">
+              Regional Parameters
+            </h2>
+            <Badge variant="success">Active</Badge>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mb-4">
+            Localization, currency, and academic calendar parameters:
+          </p>
+          <div className="space-y-2 text-xs">
+            <div className="flex justify-between p-2.5 rounded-[var(--radius-lg)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
+              <span className="text-[var(--text-secondary)]">Standard Currency</span>
+              <span className="font-mono text-[var(--color-success)] font-bold">{config.currency}</span>
             </div>
-            <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2 font-heading">Regional Settings</h3>
-            <p className="text-xs text-[var(--text-secondary)] mb-4">
-              Configured localization and currency parameters:
-            </p>
-            <div className="space-y-2 text-xs">
-              <div className="flex justify-between p-2 rounded-[var(--radius-md)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
-                <span className="text-[var(--text-secondary)]">Currency</span>
-                <span className="font-mono text-[var(--color-success)] font-semibold">{config.currency}</span>
-              </div>
-              <div className="flex justify-between p-2 rounded-[var(--radius-md)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
-                <span className="text-[var(--text-secondary)]">Locale</span>
-                <span className="font-mono text-[var(--foreground)]">{config.locale}</span>
-              </div>
+            <div className="flex justify-between p-2.5 rounded-[var(--radius-lg)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
+              <span className="text-[var(--text-secondary)]">System Locale</span>
+              <span className="font-mono text-[var(--foreground)]">{config.locale}</span>
             </div>
-          </Card>
+            <div className="flex justify-between p-2.5 rounded-[var(--radius-lg)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
+              <span className="text-[var(--text-secondary)]">Institution Code</span>
+              <span className="font-mono text-[var(--text-muted)]">{config.school.shortName}</span>
+            </div>
+          </div>
+        </Card>
 
-          <Card>
-            <div className="h-8 w-8 rounded-[var(--radius-md)] bg-[var(--color-warning-subtle)] text-amber-300 flex items-center justify-center mb-4 font-semibold text-xs border border-[var(--color-warning-border)]">
-              03
+        {/* Card 3: Foundation Architecture */}
+        <Card variant="elevated">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-sm font-semibold text-[var(--foreground)] font-heading">
+              Foundation Governance
+            </h2>
+            <Badge variant="neutral">Baseline v1.0</Badge>
+          </div>
+          <p className="text-xs text-[var(--text-secondary)] mb-4">
+            Design tokens and domain decoupling guarantees:
+          </p>
+          <div className="space-y-2 text-xs text-[var(--text-secondary)]">
+            <div className="p-2.5 rounded-[var(--radius-lg)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
+              <span className="text-[var(--foreground)] font-medium block">Database Independence</span>
+              <span className="text-[11px] text-[var(--text-muted)]">In-memory active; SQLite & PostgreSQL portable.</span>
             </div>
-            <h3 className="text-lg font-semibold text-[var(--foreground)] mb-2 font-heading">Design Tokens</h3>
-            <p className="text-xs text-[var(--text-secondary)] mb-4">
-              Single-source palette applied across all 22 modules:
-            </p>
-            <div className="flex flex-wrap gap-1.5 text-[11px]">
-              <span className="px-2 py-0.5 rounded bg-[var(--color-primary)] text-white font-medium">Primary</span>
-              <span className="px-2 py-0.5 rounded bg-[var(--color-secondary)] text-white font-medium">Secondary</span>
-              <span className="px-2 py-0.5 rounded bg-[var(--color-success)] text-white font-medium">Success</span>
-              <span className="px-2 py-0.5 rounded bg-[var(--color-warning)] text-black font-medium">Warning</span>
-              <span className="px-2 py-0.5 rounded bg-[var(--color-error)] text-white font-medium">Error</span>
+            <div className="p-2.5 rounded-[var(--radius-lg)] bg-[var(--surface-base)] border border-[var(--border-subtle)]">
+              <span className="text-[var(--foreground)] font-medium block">Design System v1.0</span>
+              <span className="text-[11px] text-[var(--text-muted)]">Token-only palette and shared UI primitives.</span>
             </div>
-          </Card>
-        </div>
-      </main>
-
-      <footer className="max-w-6xl w-full mx-auto border-t border-[var(--border-subtle)] pt-6 text-xs text-[var(--text-muted)] flex justify-between">
-        <span>School Universel Platform · Master Baseline</span>
-        <span>Standardized Design System Foundation v1.0</span>
-      </footer>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }

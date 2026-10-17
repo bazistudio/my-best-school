@@ -179,6 +179,8 @@ export function validateAcademicYear(input: CreateAcademicYearDto): ValidationRe
   }
 
   if (input.terms && input.terms.length > 0) {
+    const parentValid = isValidIsoDate(input.startDate) && isValidIsoDate(input.endDate);
+
     input.terms.forEach((term, index) => {
       if (!term.name || term.name.trim().length < 2) {
         errors.push({ field: `terms[${index}].name`, message: "Term name is required." });
@@ -188,8 +190,25 @@ export function validateAcademicYear(input: CreateAcademicYearDto): ValidationRe
       }
       if (!isValidIsoDate(term.startDate) || !isValidIsoDate(term.endDate)) {
         errors.push({ field: `terms[${index}].date`, message: "Term dates must be in YYYY-MM-DD format." });
-      } else if (new Date(term.startDate) >= new Date(term.endDate)) {
-        errors.push({ field: `terms[${index}].endDate`, message: "Term end date must be after term start date." });
+      } else {
+        if (new Date(term.startDate) >= new Date(term.endDate)) {
+          errors.push({ field: `terms[${index}].endDate`, message: "Term end date must be after term start date." });
+        }
+
+        if (parentValid) {
+          if (new Date(term.startDate) < new Date(input.startDate)) {
+            errors.push({
+              field: `terms[${index}].startDate`,
+              message: "Term start date cannot precede the parent academic year start date.",
+            });
+          }
+          if (new Date(term.endDate) > new Date(input.endDate)) {
+            errors.push({
+              field: `terms[${index}].endDate`,
+              message: "Term end date cannot exceed the parent academic year end date.",
+            });
+          }
+        }
       }
     });
   }

@@ -10,8 +10,15 @@
   ],
   "scripts": {
     "dev": "npm run dev --workspace=@universal-school/web",
+    "dev:backend": "npm run dev --workspace=@universal-school/backend",
+    "dev:all": "npm run dev:backend & npm run dev",
     "build": "npm run build --workspace=@universal-school/web",
-    "typecheck": "npm run typecheck --workspace=@universal-school/web",
+    "typecheck": "npm run typecheck --workspace=@universal-school/validation && npm run typecheck --workspace=@universal-school/shared-types && npm run typecheck --workspace=@universal-school/config && npm run typecheck --workspace=@universal-school/backend && npm run typecheck --workspace=@universal-school/web",
+    "typecheck:web": "npm run typecheck --workspace=@universal-school/web",
+    "typecheck:backend": "npm run typecheck --workspace=@universal-school/backend",
+    "typecheck:packages": "npm run typecheck --workspace=@universal-school/validation && npm run typecheck --workspace=@universal-school/shared-types && npm run typecheck --workspace=@universal-school/config",
+    "test": "npm run test --workspace=@universal-school/backend",
+    "test:backend": "npm run test --workspace=@universal-school/backend",
     "lint": "npm run lint --workspace=@universal-school/web"
   },
   "engines": {

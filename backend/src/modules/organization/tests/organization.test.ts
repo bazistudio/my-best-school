@@ -105,6 +105,128 @@ async function runTests() {
     assert(e.code === "VALIDATION_FAILED", "Chronological order error throws VALIDATION_FAILED");
   }
 
+  // 6.1 Term Regression: Term starts before parent academic year
+  try {
+    await service.createAcademicYear({
+      name: "2029-2030",
+      startDate: "2029-08-01",
+      endDate: "2030-05-31",
+      terms: [
+        {
+          name: "Early Term",
+          termCode: "T-EARLY",
+          startDate: "2029-07-15", // Before 2029-08-01!
+          endDate: "2029-12-20",
+        },
+      ],
+    });
+    assert(false, "Prevented term starting before parent academic year");
+  } catch (err: unknown) {
+    const e = err as { code: string };
+    assert(e.code === "VALIDATION_FAILED", "Term starting before academic year throws VALIDATION_FAILED");
+  }
+
+  // 6.2 Term Regression: Term ends after parent academic year
+  try {
+    await service.createAcademicYear({
+      name: "2029-2030",
+      startDate: "2029-08-01",
+      endDate: "2030-05-31",
+      terms: [
+        {
+          name: "Late Term",
+          termCode: "T-LATE",
+          startDate: "2030-01-05",
+          endDate: "2030-06-15", // After 2030-05-31!
+        },
+      ],
+    });
+    assert(false, "Prevented term ending after parent academic year");
+  } catch (err: unknown) {
+    const e = err as { code: string };
+    assert(e.code === "VALIDATION_FAILED", "Term ending after academic year throws VALIDATION_FAILED");
+  }
+
+  // 6.3 Term Regression: Term start date after term end date
+  try {
+    await service.createAcademicYear({
+      name: "2029-2030",
+      startDate: "2029-08-01",
+      endDate: "2030-05-31",
+      terms: [
+        {
+          name: "Reversed Term",
+          termCode: "T-REV",
+          startDate: "2029-12-20",
+          endDate: "2029-09-01", // Reversed!
+        },
+      ],
+    });
+    assert(false, "Prevented term start date after term end date");
+  } catch (err: unknown) {
+    const e = err as { code: string };
+    assert(e.code === "VALIDATION_FAILED", "Term start date after end date throws VALIDATION_FAILED");
+  }
+
+  // 6.4 Term Regression: Term matching academic year boundaries exactly is accepted
+  const exactBoundaryYear = await service.createAcademicYear({
+    name: "2029-2030",
+    startDate: "2029-08-01",
+    endDate: "2030-05-31",
+    terms: [
+      {
+        name: "Full Year Term",
+        termCode: "T-FULL",
+        startDate: "2029-08-01",
+        endDate: "2030-05-31",
+      },
+    ],
+  });
+  assert(exactBoundaryYear.terms.length === 1, "Term matching exact academic year boundaries accepted");
+
+  // 6.5 Term Regression: Multiple terms lying completely inside academic year accepted
+  const multiTermYear = await service.createAcademicYear({
+    name: "2031-2032",
+    startDate: "2031-08-01",
+    endDate: "2032-05-31",
+    terms: [
+      {
+        name: "Term 1",
+        termCode: "T-1",
+        startDate: "2031-08-01",
+        endDate: "2031-12-20",
+      },
+      {
+        name: "Term 2",
+        termCode: "T-2",
+        startDate: "2032-01-05",
+        endDate: "2032-05-31",
+      },
+    ],
+  });
+  assert(multiTermYear.terms.length === 2, "Multiple valid terms inside academic year accepted");
+
+  // 6.6 Term Regression: Term with missing/invalid required dates rejected
+  try {
+    await service.createAcademicYear({
+      name: "2033-2034",
+      startDate: "2033-08-01",
+      endDate: "2034-05-31",
+      terms: [
+        {
+          name: "Invalid Date Term",
+          termCode: "T-INV",
+          startDate: "invalid-date",
+          endDate: "2034-01-01",
+        },
+      ],
+    });
+    assert(false, "Prevented term with invalid date format");
+  } catch (err: unknown) {
+    const e = err as { code: string };
+    assert(e.code === "VALIDATION_FAILED", "Term with invalid date format throws VALIDATION_FAILED");
+  }
+
   // 7. Academic Year Activation Transition
   const nextSession = await service.createAcademicYear({
     name: "2027-2028",
